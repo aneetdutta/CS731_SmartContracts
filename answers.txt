@@ -1,0 +1,21 @@
+1. tx.origin should not be used for authorization because it is vulnerable to phishing attacks that can drain out all the funds from the contract. Considering the scenario where a fake contract is created with a function in it that calls to the transfer_money(receiver,amount) function of the original contract. transfer_money(receiver,money) uses tx.origin==owner for authorization. Now, the attacker relays the transaction with the address of original contract and it will pass the test condition which checks the original sender of the transaction and not the immediate sender. The attacker will now able to transfer the balance held in the contract address to it's own. Instead if we have used msg.sender==owner for the authorization then this type of attack will not be possible because the msg.sender will give us the immediate sender's address.
+ 
+
+2. ABI stands for Application Binary interface which is data encoding scheme and is the standard way to interact with the contracts in ethereum blockchain, both from outside the blockchain and for contract-to-contract interaction.
+	Once the contract is deployed in the blockchain, it can be accessed by its address and the byte code is stored in ethereum storage. But a contact contains more than one function and this byte code is needed to be interpreted correctly. ABI is a .json file that describes the deployed contracts and its functions. It helps to interact with the deployed contracts by calling its function.
+
+3. The function declared as view will not modify the state and is used only to retrieve the values by reading the correct state. Getter functions are generally marked as view. The modification of state refers to the following points:
+    1. State variables being written to.
+    2. Events being emitted.
+    3. Other contracts being created.
+    4. selfdestruct being used.
+    5. Ether being sent via calls.
+    6. Calling functions that are not marked view or pure.
+    7. Low-level calls being used.
+    8. Inline assembly containing certain opcodes being used. 
+
+4. assert() and require() are both used for condition checking in the smart contract codes but are different in terms of gas usage when the condition fails. When a condition in assert() fails it uses all the remaining gases and uses the 0xfe to cause an error condition. When a condition in require() fails, 0xfd code is used to raise an error condition which is the same revert() uses and it refunds the remaining gas to the caller.
+ require() function is used for validating inputs, response from external contracts, state conditions before executing any function. assert() is used for checking overflow/underflow and invariants.
+
+
+5. Ethereum checksum address is encoded in the upper and lower case variation of A-F hexadecimal letters in the address while non-checksum addresses are encoded in only lower case letters. The validity of the checksum addresses can be checked but the validity of non-checksum addresses can not be checked. Both checksum and non-checksum address will lead to same destination but checking the validity of the address using checksum address is preferable because if we send any ether to any wrong address by mistake that coin will be lost forever. 
